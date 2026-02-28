@@ -16,7 +16,10 @@ import auth from "./src/routes/authRoutes.js";
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:5173", "https://licenses-management-system-frontend.vercel.app"],
+  credentials: true,
+}));
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(auth);
