@@ -31,5 +31,4 @@ app.use(reports);
 app.use(workers);
 app.use(dashboard);
 
-app.listen(3000);
-console.log("Server on port 3000");
+export default app;
