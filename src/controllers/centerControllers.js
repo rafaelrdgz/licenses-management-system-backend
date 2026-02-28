@@ -1,6 +1,7 @@
 import CenterServices from "../services/centerServices.js";
 import transporter from "../configs/emailTransporterConfig.js";
 import { centerReport as centerReportPdf } from "../utils/createPdf.js";
+import validateController from "../utils/validations/validateController.js";
 
 export const getCenter = async (req, res) => {
   try {
@@ -27,6 +28,16 @@ export const updateCenter = async (req, res) => {
       accountantName,
       syndicateSecretaryName,
     } = req.body;
+
+    // Validate inputs
+    await validateController('entityCode', code);
+    await validateController('name', name);
+    await validateController('address', address);
+    await validateController('phone', phone);
+    await validateController('name', directorName);
+    await validateController('name', humanResourcesName);
+    await validateController('name', accountantName);
+    await validateController('name', syndicateSecretaryName);
 
     const response = await CenterServices.updateCenter(
       code,

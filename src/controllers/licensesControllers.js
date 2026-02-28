@@ -1,9 +1,15 @@
 import { customAlphabet } from "nanoid";
 import LicensesServices from "../services/licensesServices.js";
+import validateController from "../utils/validations/validateController.js";
 
 export const createLicense = async (req, res) => {
   try {
     const { driverId, category, restrictions } = req.body;
+    
+    await validateController('personId', driverId);
+    await validateController('name', category);
+    await validateController('points', restrictions);
+
     const issueDate = new Date();
     const expirationDate = new Date(
       issueDate.getFullYear() + 20,
@@ -32,6 +38,7 @@ export const createLicense = async (req, res) => {
 export const existsLicense = async (req, res) => {
   try {
     const { id } = req.params;
+    await validateController('license', id);
     console.log(id);
     const result = await LicensesServices.getLicenseById(id);
 
@@ -57,7 +64,9 @@ export const getLicenses = async (req, res) => {
 
 export const getLicense = async (req, res) => {
   try {
-    const result = await LicensesServices.getLicenseById(req.params.id);
+    const { id } = req.params;
+    await validateController('license', id);
+    const result = await LicensesServices.getLicenseById(id);
     if (result.rows.length > 0) {
       res.status(200).json(result.rows[0]);
     } else {
@@ -70,7 +79,9 @@ export const getLicense = async (req, res) => {
 
 export const getMissingCategories = async (req, res) => {
   try {
-    const result = await LicensesServices.getMissingCategories(req.params.id);
+    const { id } = req.params;
+    await validateController('license', id);
+    const result = await LicensesServices.getMissingCategories(id);
     res.status(200).json(result.rows[0].get_missing_categories);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -80,6 +91,11 @@ export const getMissingCategories = async (req, res) => {
 export const updateLicense = async (req, res) => {
   try {
     const { expirationDate, restrictions, renewed, points } = req.body;
+
+    await validateController('date', expirationDate);
+    await validateController('points', restrictions);
+    await validateController('boolean', renewed);
+    await validateController('points', points);
 
     console.log(expirationDate, restrictions, renewed, points);
 
@@ -99,8 +115,13 @@ export const updateLicense = async (req, res) => {
 
 export const addLicenseCategory = async (req, res) => {
   try {
-    const { expirationDate, restrictions, renewed, points, category } =
-      req.body;
+    const { expirationDate, restrictions, renewed, points, category } = req.body;
+
+    await validateController('date', expirationDate);
+    await validateController('points', restrictions);
+    await validateController('boolean', renewed);
+    await validateController('points', points);
+    await validateController('name', category);
 
     console.log(expirationDate, restrictions, renewed, points, category);
 
@@ -126,6 +147,8 @@ export const deleteLicense = async (req, res) => {
     if (!id) {
       return res.status(400).json({ error: "ID is required" });
     }
+
+    await validateController('license', id);
 
     const result = await LicensesServices.deleteLicense(id);
 

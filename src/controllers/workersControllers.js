@@ -1,9 +1,16 @@
 import WorkersServices from "../services/workersServices.js";
+import validateController from "../utils/validations/validateController.js";
 
 export const createWorker = async (req, res) => {
   try {
     const { id, name, email, lastNames, password, role } = req.body;
     console.log(name, email, lastNames, password, role);
+
+    await validateController('name', name);
+    await validateController('email', email);
+    await validateController('password', password);
+    // Add other validations as needed
+
     const result = await WorkersServices.createWorker(
       id,
       name,
@@ -44,6 +51,12 @@ export const updateWorker = async (req, res) => {
   try {
     const { id, name, lastNames, email, password, role } = req.body;
     console.log(id, name, lastNames, email, password, role);
+
+    await validateController('name', name);
+    await validateController('email', email);
+    await validateController('password', password);
+    // Add other validations as needed
+
     const result = await WorkersServices.updateWorker(
       id,
       name,

@@ -1,10 +1,18 @@
 import { v4 } from "uuid";
 import examsServices from "../services/examsServices.js";
+import validateController from "../utils/validations/validateController.js";
 
 export const createExam = async (req, res) => {
   try {
     const { type, result, entityCode, examinerName, personId } = req.body;
     console.log(type, result, entityCode, examinerName, personId);
+
+    await validateController('type', type);
+    await validateController('result', result);
+    await validateController('entityCode', entityCode);
+    await validateController('name', examinerName);
+    await validateController('personId', personId);
+
     const r = await examsServices.createExam(
       v4(),
       type,
@@ -46,6 +54,13 @@ export const updateExam = async (req, res) => {
   try {
     const { type, date, result, entityCode, examinerName, personId } = req.body;
     console.log(type, date, result, entityCode, examinerName, personId);
+
+    await validateController('type', type);
+    await validateController('result', result);
+    await validateController('entityCode', entityCode);
+    await validateController('name', examinerName);
+    await validateController('personId', personId);
+
     const r = await examsServices.updateExam(
       req.params.id,
       type,

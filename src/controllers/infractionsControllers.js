@@ -1,11 +1,17 @@
 import { v4 } from "uuid";
 import InfractionsServices from "../services/infractionsServices.js";
+import validateController from "../utils/validations/validateController.js";
 
 export const createInfraction = async (req, res) => {
   try {
     const { licenseid, type, address, description, pointsDeducted, paid } =
       req.body;
     console.log(licenseid, type, address, description, pointsDeducted, paid);
+
+    await validateController('license', licenseid);
+    await validateController('address', address);
+    await validateController('points', pointsDeducted);
+
     const date = new Date();
     const result = await InfractionsServices.createInfraction(
       v4(),
@@ -65,6 +71,15 @@ export const updateInfraction = async (req, res) => {
       pointsDeducted,
       paid
     );
+
+    await validateController('license', licenseid);
+    await validateController('type', type);
+    await validateController('date', date);
+    await validateController('address', address);
+    await validateController('description', description);
+    await validateController('points', pointsDeducted);
+    await validateController('paid', paid);
+
     const result = await InfractionsServices.updateInfraction(
       req.params.id,
       licenseid,

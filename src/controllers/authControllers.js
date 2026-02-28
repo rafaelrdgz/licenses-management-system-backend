@@ -2,6 +2,7 @@ import { config } from "dotenv";
 import AuthServices from "../services/authServices.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs"; // Importa bcrypt directamente
+import validateController from "../utils/validations/validateController.js";
 
 config();
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -9,6 +10,11 @@ const JWT_SECRET = process.env.JWT_SECRET;
 export const login = async (req, res) => {
   try {
     const { email, password } = req.query;
+
+    // Validate email and password
+    await validateController('email', email);
+    await validateController('password', password);
+    
     const result = await AuthServices.loginWorker(email);
 
     if (result.rows.length > 0) {

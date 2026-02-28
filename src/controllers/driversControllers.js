@@ -1,4 +1,5 @@
 import DriversServices from "../services/driversServices.js";
+import validateController from "../utils/validations/validateController.js";
 
 export const getDrivers = async (req, res) => {
   try {
@@ -50,6 +51,14 @@ export const updateDriver = async (req, res) => {
       bornDate,
       licenseStatus,
     } = req.body;
+
+    await validateController('name', name);
+    await validateController('address', address);
+    await validateController('phone', phoneNumber);
+    await validateController('email', email);
+    await validateController('name', lastNames);
+    await validateController('license', licenseStatus);
+
     console.log(
       name,
       address,

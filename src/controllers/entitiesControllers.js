@@ -2,11 +2,17 @@ import { v4 } from "uuid";
 import transporter from "../configs/emailTransporterConfig.js";
 import EntitiesServices from "../services/entitiesServices.js";
 import { entityReport } from "../utils/createPdf.js";
+import validateController from '../utils/validations/validateController.js';
 
 export const createEntity = async (req, res) => {
   try {
     const { name, address, phone, directorName, email, type } = req.body;
     console.log(name, address, phone, directorName, email, type);
+    await validateController('name', name);
+    await validateController('address', address);
+    await validateController('phone', phone);
+    await validateController('name', directorName);
+    await validateController('email', email);
     const result = await EntitiesServices.createEntity(
       v4(),
       name,
@@ -69,6 +75,11 @@ export const updateEntity = async (req, res) => {
   try {
     const { name, address, phone, directorName, email, type } = req.body;
     console.log(name, address, phone, directorName, email, type);
+    await validateController('name', name);
+    await validateController('address', address);
+    await validateController('phone', phone);
+    await validateController('name', directorName);
+    await validateController('email', email);
     const result = await EntitiesServices.updateEntity(
       req.params.id,
       name,

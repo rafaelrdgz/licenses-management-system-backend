@@ -1,10 +1,17 @@
 import ClientsServices from "../services/clientsServices.js";
+import validateController from "../utils/validations/validateController.js";
 
 export const createClient = async (req, res) => {
   try {
     const { id, name, address, phoneNumber, email, lastNames, bornDate } =
       req.body;
     console.log(name, address, phoneNumber, email, lastNames, bornDate);
+
+    await validateController('name', name);
+    await validateController('address', address);
+    await validateController('phone', phoneNumber);
+    await validateController('email', email);
+
     const result = await ClientsServices.createClient(
       id,
       name,
@@ -63,6 +70,12 @@ export const updateClient = async (req, res) => {
   try {
     const { name, address, phoneNumber, email, lastNames, bornDate } = req.body;
     console.log(name, address, phoneNumber, email, lastNames, bornDate);
+
+    await validateController('name', name);
+    await validateController('address', address);
+    await validateController('phone', phoneNumber);
+    await validateController('email', email);
+
     const result = await ClientsServices.updateClient(
       req.params.id,
       name,
